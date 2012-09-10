@@ -3390,7 +3390,7 @@ p, li { white-space: pre-wrap; }
               <item>
                <layout class="QVBoxLayout" name="verticalLayout_217">
                 <item>
-                 <widget class="QLCDNumber" name="fmDepthLCD">
+                 <widget class="QLCDNumber" name="lfo2FreqLCD">
                   <property name="maximumSize">
                    <size>
                     <width>64</width>
@@ -3415,7 +3415,7 @@ p, li { white-space: pre-wrap; }
                    </spacer>
                   </item>
                   <item>
-                   <widget class="QDial" name="fmDepth_Dial">
+                   <widget class="QDial" name="lfo2Freq_Dial">
                     <property name="minimumSize">
                      <size>
                       <width>50</width>
@@ -3471,7 +3471,7 @@ p, li { white-space: pre-wrap; }
               <item>
                <layout class="QVBoxLayout" name="verticalLayout_218">
                 <item>
-                 <widget class="QLCDNumber" name="lfo2FreqLCD">
+                 <widget class="QLCDNumber" name="fmDepthLCD">
                   <property name="maximumSize">
                    <size>
                     <width>64</width>
@@ -3496,7 +3496,7 @@ p, li { white-space: pre-wrap; }
                    </spacer>
                   </item>
                   <item>
-                   <widget class="QDial" name="lfo2Freq_Dial">
+                   <widget class="QDial" name="fmDepth_Dial">
                     <property name="minimumSize">
                      <size>
                       <width>50</width>
