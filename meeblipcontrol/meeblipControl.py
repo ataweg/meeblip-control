@@ -17,50 +17,51 @@ class MainWindow(QtGui.QMainWindow):
         super(MainWindow, self).__init__(parent)
         self.midiOutputDevicesDict = {}
         self.midiInputDevicesDict = {}
+        self.midiEnable = 0
         self.onValue = 64
         self.offValue = 0
         #control change values
         self.dialDict = {
-                         'pwmDepth_Dial':       14,   # PWMDEPTH        = MIDICC + $0E ; Knob 1 14    ; (=LFO2LEVEL)
-                         'midiKnob2_Dial':      15,   # MIDI_KNOB_2     = MIDICC + $0F ; Knob 2 15
-                         'midiKnob3_Dial':      16,   # MIDI_KNOB_3     = MIDICC + $10 ; Knob 3 16
-                         'midiKnob4_Dial':      17,   # MIDI_KNOB_4     = MIDICC + $11 ; Knob 4 17
-                         'lfo2Freq_Dial':       18,   # LFO2FREQ        = MIDICC + $12 ; Knob 5 18    ; currently not used
-                         'fmDepth_Dial':        19,   # FMDEPTH         = MIDICC + $13 ; Knob 6 19    ; currently not used
-                         'mixerBalance_Dial':   20,   # MIXER_BALANCE   = MIDICC + $14 ; Knob 7 20
-                         'masterVolume_Dial':   21,   # MASTER_VOLUME   = MIDICC + $15 ; Knob 8 21
+                         'pwmDepth_Dial':           14,   # PWMDEPTH        = MIDICC + $0E ; Knob 1 14    ; (=LFO2LEVEL)
+                         'midiKnob2_Dial':          15,   # MIDI_KNOB_2     = MIDICC + $0F ; Knob 2 15
+                         'midiKnob3_Dial':          16,   # MIDI_KNOB_3     = MIDICC + $10 ; Knob 3 16
+                         'midiKnob4_Dial':          17,   # MIDI_KNOB_4     = MIDICC + $11 ; Knob 4 17
+                         'lfo2Freq_Dial':           18,   # LFO2FREQ        = MIDICC + $12 ; Knob 5 18    ; currently not used
+                         'fmDepth_Dial':            19,   # FMDEPTH         = MIDICC + $13 ; Knob 6 19    ; currently not used
+                         'mixerBalance_Dial':       20,   # MIXER_BALANCE   = MIDICC + $14 ; Knob 7 20
+                         'masterVolume_Dial':       21,   # MASTER_VOLUME   = MIDICC + $15 ; Knob 8 21
 
-                         'attackTime_Slider':   22,   # ATTACKTIME      = MIDICC + $16 ; _Slider 1 22 ; DCA envelope
-                         'decaytTme_Slider':    23,   # DECAYTIME       = MIDICC + $17 ; _Slider 2 23
-                         'sustainLevel_Slider': 24,   # SUSTAINLEVEL    = MIDICC + $18 ; _Slider 3 24
-                         'releaseTime_Slider':  25,   # RELEASETIME     = MIDICC + $19 ; _Slider 4 25
-                         'attackTime2_Slider':  26,   # ATTACKTIME2     = MIDICC + $1A ; _Slider 5 26 ; DCF envelope
-                         'decayTime2_Slider':   27,   # DECAYTIME2      = MIDICC + $1B ; _Slider 6 27
-                         'sustainLevel2_Slider':28,   # SUSTAINLEVEL2   = MIDICC + $1C ; _Slider 7 28
-                         'releaseTime2_Slider': 29,   # RELEASETIME2    = MIDICC + $1D ; _Slider 8 29
+                         'dcfAttackTime_Slider':    22,   # ATTACKTIME2     = MIDICC + $16 ; _Slider 1 22 ; DCF envelope
+                         'dcfDecayTime_Slider':     23,   # DECAYTIME2      = MIDICC + $17 ; _Slider 2 23
+                         'dcfSustainLevel_Slider':  24,   # SUSTAINLEVEL2   = MIDICC + $18 ; _Slider 3 24
+                         'dcfReleaseTime_Slider':   25,   # RELEASETIME2    = MIDICC + $19 ; _Slider 4 25
+                         'dcaAttackTime_Slider':    26,   # ATTACKTIME      = MIDICC + $1A ; _Slider 5 26 ; DCA envelope
+                         'dcaDecayTime_Slider':     27,   # DECAYTIME       = MIDICC + $1B ; _Slider 6 27
+                         'dcaSustainLevel_Slider':  28,   # SUSTAINLEVEL    = MIDICC + $1C ; _Slider 7 28
+                         'dcaReleaseTime_Slider':   29,   # RELEASETIME     = MIDICC + $1D ; _Slider 8 29
 
-#                        'sw1':                 44,   # SW1             = MIDICC + $2C ; Reserved
-#                        'sw2':                 45,   # SW2             = MIDICC + $2D ; Reserved
-#                        'sw3':                 46,   # SW3             = MIDICC + $2E ; Reserved
-#                        'sw4':                 47,   # SW4             = MIDICC + $2F ; Reserved
+#                        'sw1':                     44,   # SW1             = MIDICC + $2C ; Reserved
+#                        'sw2':                     45,   # SW2             = MIDICC + $2D ; Reserved
+#                        'sw3':                     46,   # SW3             = MIDICC + $2E ; Reserved
+#                        'sw4':                     47,   # SW4             = MIDICC + $2F ; Reserved
 
-                         'resonanceDial':       48,   # RESONANCE       = MIDICC + $30
-                         'cutoffDial':          49,   # CUTOFF          = MIDICC + $31
-                         'lfoRateDial':         50,   # LFOFREQ         = MIDICC + $32
-                         'lfoDepthDial':        51,   # PANEL_LFOLEVEL  = MIDICC + $33
-                         'envAmountDial':       52,   # VCFENVMOD       = MIDICC + $34
-                         'glideAmountDial':     53,   # PORTAMENTO      = MIDICC + $35
-                         'oscPWMDial':          54,   # PULSE_KNOB      = MIDICC + $36 ; (=LFO2FREQ)
-                         'oscDetuneDial':       55,   # OSC_DETUNE      = MIDICC + $37
+                         'resonanceDial':           48,   # RESONANCE       = MIDICC + $30
+                         'cutoffDial':              49,   # CUTOFF          = MIDICC + $31
+                         'lfoRateDial':             50,   # LFOFREQ         = MIDICC + $32
+                         'lfoDepthDial':            51,   # PANEL_LFOLEVEL  = MIDICC + $33
+                         'envAmountDial':           52,   # VCFENVMOD       = MIDICC + $34
+                         'glideAmountDial':         53,   # PORTAMENTO      = MIDICC + $35
+                         'oscPWMDial':              54,   # PULSE_KNOB      = MIDICC + $36 ; (=LFO2FREQ)
+                         'oscDetuneDial':           55,   # OSC_DETUNE      = MIDICC + $37
 
-                                                      # X               = MIDICC + $38 ; Undefined
-                                                      # X               = MIDICC + $39 ; Undefined
-                         'filterDecaySlider':   58,   # KNOB_DCF_DECAY  = MIDICC + $3A
-                         'filterAttackSlider':  59,   # KNOB_DCF_ATTACK = MIDICC + $3B
-                         'ampDecaySlider':      60,   # KNOB_AMP_DECAY  = MIDICC + $3C
-                         'ampAttackSlider':     61}   # KNOB_AMP_ATTACK = MIDICC + $3D
-                                                      # X               = MIDICC + $3E ; Undefined
-                                                      # X               = MIDICC + $3F ; Undefined
+                                                          # X               = MIDICC + $38 ; Undefined
+                                                          # X               = MIDICC + $39 ; Undefined
+                         'filterDecaySlider':       58,   # KNOB_DCF_DECAY  = MIDICC + $3A
+                         'filterAttackSlider':      59,   # KNOB_DCF_ATTACK = MIDICC + $3B
+                         'ampDecaySlider':          60,   # KNOB_AMP_DECAY  = MIDICC + $3C
+                         'ampAttackSlider':         61}   # KNOB_AMP_ATTACK = MIDICC + $3D
+                                                          # X               = MIDICC + $3E ; Undefined
+                                                          # X               = MIDICC + $3F ; Undefined
 
         self.buttonDict = {                                                                                     # S_KNOB_SHIFT      = MIDICC + $40
                            'oscFMOn':           [65, self.onValue], 'oscFMOff':          [65, self.offValue],   # S_OSC_FM          = MIDICC + $41
@@ -114,7 +115,27 @@ class MainWindow(QtGui.QMainWindow):
                               'antiAliasBox':   'antiAliasGroup',
                               'envSustainBox':  'envSustainGroup',
                               'pwmSweepBox':    'pwmSweepGroup',
-                              'oscAWaveBox':    'oscAWaveGroup'}
+                              'oscAWaveBox':    'oscAWaveGroup',
+                              'switch30Box':    'switch30Group',
+                              'switch31Box':    'switch31Group',
+                              'switch32Box':    'switch32Group',
+                              'switch33Box':    'switch33Group',
+                              'switch34Box':    'switch34Group',
+                              'switch35Box':    'switch35Group',
+                              'switch36Box':    'switch36Group',
+                              'switch37Box':    'switch37Group',
+                              'switch40Box':    'switch40Group',
+                              'switch41Box':    'switch41Group',
+                              'switch42Box':    'switch42Group',
+                              'switch43Box':    'switch43Group',
+                              'switch44Box':    'switch44Group',
+                              'switch45Box':    'switch45Group',
+                              'switch46Box':    'switch46Group',
+                              'switch47Box':    'switch47Group' }
+
+# ---------------------------------------------------------------------------
+#
+# ---------------------------------------------------------------------------
 
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
@@ -138,6 +159,10 @@ class MainWindow(QtGui.QMainWindow):
             currentGroup.customContextMenuRequested.connect(partial(self.windowHandler.contextMenu, mainWindowInstance=self,
                                                                     widgetName=buttonGroupBox))
 
+# ---------------------------------------------------------------------------
+#
+# ---------------------------------------------------------------------------
+
         class _MidiInput(QtCore.QThread):
             dataReceivedSignal = QtCore.pyqtSignal(int, int)
             midiExceptionSignal = QtCore.pyqtSignal(str)
@@ -153,24 +178,30 @@ class MainWindow(QtGui.QMainWindow):
                         try:
                             self.mainWindowHandler.midiInputMutex.lock()
                             for inputDevice in self.mainWindowHandler.midiSelectedInputDevicesDict.values():
-                                        if inputDevice.poll():
-                                            data = inputDevice.read(1)
-                                            channel = (data[0][0][0] & 0xF) + 1
-                                            if channel == self.mainWindowHandler.midiInputChannel:
-                                                status = data[0][0][0] & 0xF0
-                                                cc = data[0][0][1]
-                                                #if a CC message arrives and is mapped
-                                                if status == 0xB0 and cc in self.mainWindowHandler.currentPatch.patchMIDIMapDict:
-                                                    value = data[0][0][2]
-                                                    self.dataReceivedSignal.emit(cc, value)
-                                                else:
-                                                    if self.mainWindowHandler.midiSelectedOutputDevice:
-                                                        self.mainWindowHandler.midiSelectedOutputDevice.write(data)
+                                if inputDevice.poll():
+                                    data = inputDevice.read(1)
+                                    channel = (data[0][0][0] & 0xF) + 1
+                                    if channel == self.mainWindowHandler.midiInputChannel:
+                                        status = data[0][0][0] & 0xF0
+                                        cc = data[0][0][1]
+                                        #if a CC message arrives and is mapped
+                                        if status == 0xB0 and cc in self.mainWindowHandler.currentPatch.patchMIDIMapDict:
+                                            value = data[0][0][2]
+                                            self.dataReceivedSignal.emit(cc, value)
+                                        else:
+                                            if self.mainWindowHandler.midiSelectedOutputDevice:
+                                                self.mainWindowHandler.midiSelectedOutputDevice.write(data)
+
                         except midi.MidiException as e:
                             self.midiExceptionSignal.emit(unicode(e))
                         finally:
                             self.mainWindowHandler.midiInputMutex.unlock()
                     self.usleep(200) #don't hog the processor in the polling loop!
+
+# ---------------------------------------------------------------------------
+#
+# ---------------------------------------------------------------------------
+
         #initialize MIDI, start listening for incoming MIDI data
         midi.init()
         self.getMIDIDevices()
@@ -180,7 +211,12 @@ class MainWindow(QtGui.QMainWindow):
         self.midiInputThread.start()
         self.ui.action_Save.setEnabled(False)
         self.restoreSettings(self.windowHandler)
+        self.midiEnable = 1
         self.windowHandler.new(self)
+
+# ---------------------------------------------------------------------------
+#
+# ---------------------------------------------------------------------------
 
     def midiInputCallback(self, cc, value):
         widgetName = self.windowHandler.currentPatch.patchMIDIMapDict[cc]
@@ -199,6 +235,10 @@ class MainWindow(QtGui.QMainWindow):
                 for button in buttonGroup.buttons():
                     if button != checkedButton:
                         button.toggle()
+
+# ---------------------------------------------------------------------------
+#
+# ---------------------------------------------------------------------------
 
     def getMIDIDevices(self):
         midiOutputDevices = []
@@ -235,6 +275,16 @@ class MainWindow(QtGui.QMainWindow):
             inputFunction = partial(self.windowHandler.midiInputSelect, mainWindowInstance=self, device=device)
             device.triggered.connect(inputFunction)
 
+# ---------------------------------------------------------------------------
+#
+# ---------------------------------------------------------------------------
+
+#   [HKEY_CURRENT_USER\Software\MeeblipControl\MeeblipControl]
+#   "midiInputDevices"=hex(7):00,00
+#   "midiOutputDevice"="13f79891a77e9ecb16d9b5d265db8e6e"
+#   "midiOutputChannel"=dword:00000001
+#   "midiInputChannel"=dword:00000001
+
     def restoreSettings(self, mainWindowHandler):
         mainWindowHandler.midiInputChannel = self.settings.value('midiInputChannel').toInt()[0]
         if not mainWindowHandler.midiInputChannel:
@@ -267,6 +317,10 @@ class MainWindow(QtGui.QMainWindow):
                     registryOutputDevice = deviceHash
         self.settings.setValue('midiOutputDevice', registryOutputDevice)
 
+# ---------------------------------------------------------------------------
+#
+# ---------------------------------------------------------------------------
+
     @QtCore.pyqtSignature("")
     def on_action_MIDI_Channel_triggered(self):
         self.windowHandler.menuOptions(self)
@@ -295,6 +349,9 @@ class MainWindow(QtGui.QMainWindow):
     def on_action_Import_MIDI_patch_triggered(self):
         self.windowHandler.midiImport(self)
 
+# ---------------------------------------------------------------------------
+#
+# ---------------------------------------------------------------------------
 
 if __name__ == '__main__':
     app = QtGui.QApplication(sys.argv)

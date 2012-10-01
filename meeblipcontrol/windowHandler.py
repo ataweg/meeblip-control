@@ -30,27 +30,44 @@ class MainWindowHandler(object):
         self.currentFile = None
         self.midiInputMutex = QtCore.QMutex()
 
-    def dialChanged(self, value, mainWindowInstance=None, cc=None):
-        self.currentPatch.patchCCDict[cc] = value
+# ---------------------------------------------------------------------------
+#
+# ---------------------------------------------------------------------------
+
+    def sendMidi( self, cc, value):
         if self.midiSelectedOutputDevice != None:
             try:
                 self.midiSelectedOutputDevice.write_short(0xB0 | self.midiOutputChannel - 1, cc, value)
             except midi.MidiException as e:
                 QtGui.QMessageBox.warning(mainWindowInstance, "MIDI Error", unicode(e))
 
+# ---------------------------------------------------------------------------
+#
+# ---------------------------------------------------------------------------
+
+    def dialChanged(self, value, mainWindowInstance=None, cc=None):
+        self.currentPatch.patchCCDict[cc] = value
+        if mainWindowInstance.midiEnable:
+            self.sendMidi( cc, value)
+
         mainWindowInstance.ui.action_Save.setEnabled(True)
         mainWindowInstance.ui.action_New.setEnabled(True)
+
+# ---------------------------------------------------------------------------
+#
+# ---------------------------------------------------------------------------
 
     def buttonChanged(self, mainWindowInstance, value, cc, button):
         self.currentPatch.patchCCDict[cc] = value
-        if self.midiSelectedOutputDevice != None and button.isChecked():
-            try:
-                self.midiSelectedOutputDevice.write_short(0xB0 | self.midiOutputChannel - 1, cc, value)
-            except midi.MidiException as e:
-                QtGui.QMessageBox.warning(mainWindowInstance, "MIDI Error", unicode(e))
+        if button.isChecked() and mainWindowInstance.midiEnable:
+            self.sendMidi( cc, value)
 
         mainWindowInstance.ui.action_Save.setEnabled(True)
         mainWindowInstance.ui.action_New.setEnabled(True)
+
+# ---------------------------------------------------------------------------
+#
+# ---------------------------------------------------------------------------
 
     def menuOptions(self, mainWindowInstance):
         dialog = optionsDialog(self.midiInputChannel, self.midiOutputChannel)
@@ -60,10 +77,17 @@ class MainWindowHandler(object):
             mainWindowInstance.settings.setValue('midiOutputChannel', dialog.midiOutputChannel)
             mainWindowInstance.settings.setValue('midiInputChannel', dialog.midiInputChannel)
 
+# ---------------------------------------------------------------------------
+#
+# ---------------------------------------------------------------------------
+
     def midiInputSelect(self, mainWindowInstance, device):
         deviceIndex = mainWindowInstance.midiInputDevicesDict[device]
         if not device.isChecked():
             try:
+# in nachfolgender Anweisung tritt ein Problem auf
+# PortMidi attempts to close open streams when the application exits -- this is particularly difficult under Windows.
+# Exception Exception: "PortMidi: `Bad pointer'" in <pypm.Input object at 0x00BAFA58> ignored
                 self.midiSelectedInputDevicesDict.pop(deviceIndex).close()
                 device.setChecked(False)
             except midi.MidiException as e:
@@ -87,6 +111,10 @@ class MainWindowHandler(object):
         for deviceIndex in self.midiSelectedInputDevicesDict.keys():
             deviceNameList.append(hashlib.md5(midi.get_device_info(deviceIndex)[1]).hexdigest())
         mainWindowInstance.settings.setValue('midiInputDevices', deviceNameList)
+
+# ---------------------------------------------------------------------------
+#
+# ---------------------------------------------------------------------------
 
     def midiOutputSelect(self, mainWindowInstance, device):
         deviceIndex = mainWindowInstance.midiOutputDevicesDict[device]
@@ -120,6 +148,10 @@ class MainWindowHandler(object):
                     self.midiSelectedOutputDevice = None
                     mainWindowInstance.settings.setValue('midiOutputDevice', '')
 
+# ---------------------------------------------------------------------------
+#
+# ---------------------------------------------------------------------------
+
     def contextMenu(self, position, mainWindowInstance=None, widgetName=None):
         contextMenu = QtGui.QMenu()
         clearAction = None
@@ -135,8 +167,11 @@ class MainWindowHandler(object):
                 self.currentPatch.patchMIDIMapDict[cc] = None
             mainWindowInstance.ui.action_Save.setEnabled(True)
 
-    def midiLearn(self, mainWindowInstance, widgetName):
+# ---------------------------------------------------------------------------
+#
+# ---------------------------------------------------------------------------
 
+    def midiLearn(self, mainWindowInstance, widgetName):
 
         class _midiLearnWait(QtCore.QThread):
 
@@ -149,6 +184,7 @@ class MainWindowHandler(object):
                 self.midiInputChannel = midiInputChannel
                 self.midiInputMutex = midiInputMutex
                 self.threadAlive = True
+
 
             def run(self):
                 self.midiInputMutex.lock()
@@ -170,6 +206,7 @@ class MainWindowHandler(object):
                 self.midiInputMutex.unlock()
                 self.msleep(10) #don't hog the processor in the polling loop!
 
+
         def _dataReceivedCallback(cc, message=None):
             message.accept()
             self.currentPatch.patchMIDIMapDict[cc] = widgetName
@@ -190,6 +227,10 @@ class MainWindowHandler(object):
                     pass
         else:
             QtGui.QMessageBox.warning(mainWindowInstance, "MIDI Error", "No MIDI inputs selected.")
+
+# ---------------------------------------------------------------------------
+#
+# ---------------------------------------------------------------------------
 
     def saveAs(self, mainWindowInstance, filename=None):
         if not filename:
@@ -216,11 +257,19 @@ class MainWindowHandler(object):
             except:
                 QtGui.QMessageBox.warning(mainWindowInstance, "File save error", "Unknown error saving file %s." % unicode(filename))
 
+# ---------------------------------------------------------------------------
+#
+# ---------------------------------------------------------------------------
+
     def save(self, mainWindowInstance):
         if not self.currentFile:
             self.saveAs(mainWindowInstance)
         else:
             self.saveAs(mainWindowInstance, filename=self.currentFile)
+
+# ---------------------------------------------------------------------------
+#
+# ---------------------------------------------------------------------------
 
     def load(self, mainWindowInstance):
         filename = QtGui.QFileDialog.getOpenFileName(filter="*.mee")
@@ -243,19 +292,30 @@ class MainWindowHandler(object):
         except:
             QtGui.QMessageBox.warning(mainWindowInstance, "File open error", "Unknown error opening file %s." % unicode(filename))
 
+# ---------------------------------------------------------------------------
+#
+# ---------------------------------------------------------------------------
+
     def new(self, mainWindowInstance):
         if mainWindowInstance.ui.action_Save.isEnabled():
             reply = QtGui.QMessageBox.question(mainWindowInstance, "Create new patch", "Current patch is not saved.  Do you wish to continue?",
                                                QtGui.QMessageBox.Yes, QtGui.QMessageBox.No)
             if reply == QtGui.QMessageBox.No:
                 return
-        for dial in self.dialDict:
+        for dial, cc in self.dialDict.iteritems():
+            mainWindowInstance.midiEnable = 0
             dialWidget = getattr(mainWindowInstance.ui, dial)
             dialWidget.setValue(0)
+            mainWindowInstance.midiEnable = 1
+            self.sendMidi( cc, 0)
+
         for button, value in self.buttonDict.iteritems():
             if value[1] == mainWindowInstance.offValue:
+                mainWindowInstance.midiEnable = 0
                 buttonWidget = getattr(mainWindowInstance.ui, button)
                 buttonWidget.setChecked(True)
+                mainWindowInstance.midiEnable = 1
+                self.sendMidi( value[0], value[1])
 
         self.currentFile = None
         self.currentPatch = meeblipPatch()
@@ -263,27 +323,45 @@ class MainWindowHandler(object):
         mainWindowInstance.setWindowTitle("New Patch")
         mainWindowInstance.ui.action_New.setEnabled(False)
 
+# ---------------------------------------------------------------------------
+#
+# ---------------------------------------------------------------------------
+
     def restorePatchSettings(self, mainWindowInstance, meeblipPatch):
         for cc, value in meeblipPatch.patchCCDict.iteritems():
-#           if cc in range(48, 56) + range(58, 62):
             if cc in range(14, 30) + range(48, 56) + range(58, 62):
+                mainWindowInstance.midiEnable = 0       # prevents sending midi message twice
                 dialWidget = getattr(mainWindowInstance.ui, [k for k, v in self.dialDict.iteritems() if v == cc][0])
                 dialWidget.setValue(value)
+                mainWindowInstance.midiEnable = 1
                 self.dialChanged(value, mainWindowInstance, cc)
-#           elif cc in xrange(65, 80):
+
             elif cc in xrange(65, 96):
+# send button values, if there was a change
                 onButtonWidget = getattr(mainWindowInstance.ui, [k for k, v in self.buttonDict.iteritems() if v[0] == cc and
                                                                 v[1] == mainWindowInstance.onValue][0])
                 offButtonWidget = getattr(mainWindowInstance.ui, [k for k, v in self.buttonDict.iteritems() if v[0] == cc and
                                                                 v[1] == mainWindowInstance.offValue][0])
-                if value < mainWindowInstance.onValue and onButtonWidget.isChecked():
-                    offButtonWidget.toggle()
-                elif value >= mainWindowInstance.onValue and offButtonWidget.isChecked():
+
+                mainWindowInstance.midiEnable = 0       # prevents sending midi message twice
+
+                if value < mainWindowInstance.onValue and onButtonWidget.isChecked():       # clear button
+                    # clear on button if set
+                    offButtonWidget.toggle()                # sends button message twice
+                elif value >= mainWindowInstance.onValue and offButtonWidget.isChecked():   #  set button
+                    # clear off button if set
                     onButtonWidget.toggle()
+
+                mainWindowInstance.midiEnable = 1
+                self.sendMidi( cc, value)
 
         mainWindowInstance.setWindowTitle(self.currentPatch.name)
         mainWindowInstance.ui.action_Save.setEnabled(False)
         mainWindowInstance.ui.action_New.setEnabled(True)
+
+# ---------------------------------------------------------------------------
+#
+# ---------------------------------------------------------------------------
 
     def midiExport(self, mainWindowInstance):
         filename = QtGui.QFileDialog.getSaveFileName(filter="*.mid")
@@ -298,7 +376,6 @@ class MainWindowHandler(object):
                             trackNameEvent = midiwrite.TrackNameEvent(name=trackName)
                             eventList.append(trackNameEvent)
 
-#                           for index in (k for k in xrange(48, 80) if k not in range(56, 58) + range(62, 65)):
                             for index in (k for k in xrange(14, 96) if k not in range(30, 48) + range(56, 58) + range(62, 65)):
                                 ccEvent = midiwrite.ControlChangeEvent(channel=1)
                                 ccEvent.set_control(index)
@@ -322,6 +399,10 @@ class MainWindowHandler(object):
         except:
             QtGui.QMessageBox.warning(mainWindowInstance, "File save error", "Unknown error saving file %s." % unicode(filename))
 
+# ---------------------------------------------------------------------------
+#
+# ---------------------------------------------------------------------------
+
     def midiImport(self, mainWindowInstance):
         if mainWindowInstance.ui.action_Save.isEnabled():
             reply = QtGui.QMessageBox.question(mainWindowInstance, "Import MIDI patch", "Current patch is not saved.  Do you wish to continue?",
@@ -334,9 +415,8 @@ class MainWindowHandler(object):
             if filename:
                 with open(filename, "rb") as f:
                     try:
-                        pattern = midiwrite.read_midifile(f)
+                        pattern = midiwrite.read_midifile(f)        # reads all events from file
                         midiImportPatch = meeblipPatch()
-#                       ccList = [k for k in xrange(48, 80) if k not in range(56, 58) + range(62, 65)]
                         ccList = [k for k in xrange(14, 96) if k not in range(30, 48) + range(56, 58) + range(62, 65)]
                         for event in pattern[0]:
                             if isinstance(event, midiwrite.ControlChangeEvent):
@@ -365,3 +445,7 @@ class MainWindowHandler(object):
                                       "Error opening file %s:\n %s" % (unicode(filename), unicode(strerror)))
         except:
             QtGui.QMessageBox.warning(mainWindowInstance, "File open error", "Unknown error opening file %s." % unicode(filename))
+
+# ---------------------------------------------------------------------------
+#
+# ---------------------------------------------------------------------------

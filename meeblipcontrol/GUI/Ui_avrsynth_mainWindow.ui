@@ -2306,7 +2306,7 @@ p, li { white-space: pre-wrap; }
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;Filter Envelop Gernerator&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;Filter Envelop Generator&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
           </widget>
          </item>
@@ -2340,7 +2340,7 @@ p, li { white-space: pre-wrap; }
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_38">
                <item>
-                <widget class="QLCDNumber" name="attackTimeLCD0">
+                <widget class="QLCDNumber" name="dcfAttackTimeLCD">
                  <property name="maximumSize">
                   <size>
                    <width>64</width>
@@ -2365,7 +2365,7 @@ p, li { white-space: pre-wrap; }
                   </spacer>
                  </item>
                  <item>
-                  <widget class="QSlider" name="attackTime_Slider">
+                  <widget class="QSlider" name="dcfAttackTime_Slider">
                    <property name="orientation">
                     <enum>Qt::Vertical</enum>
                    </property>
@@ -2418,7 +2418,7 @@ p, li { white-space: pre-wrap; }
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_158">
                <item>
-                <widget class="QLCDNumber" name="decaytTmeLCD">
+                <widget class="QLCDNumber" name="dcfDecayTimeLCD">
                  <property name="maximumSize">
                   <size>
                    <width>64</width>
@@ -2443,7 +2443,7 @@ p, li { white-space: pre-wrap; }
                   </spacer>
                  </item>
                  <item>
-                  <widget class="QSlider" name="decaytTme_Slider">
+                  <widget class="QSlider" name="dcfDecayTime_Slider">
                    <property name="orientation">
                     <enum>Qt::Vertical</enum>
                    </property>
@@ -2496,7 +2496,7 @@ p, li { white-space: pre-wrap; }
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_159">
                <item>
-                <widget class="QLCDNumber" name="sustainLevelLCD">
+                <widget class="QLCDNumber" name="dcfSustainLevelLCD">
                  <property name="maximumSize">
                   <size>
                    <width>64</width>
@@ -2521,7 +2521,7 @@ p, li { white-space: pre-wrap; }
                   </spacer>
                  </item>
                  <item>
-                  <widget class="QSlider" name="sustainLevel_Slider">
+                  <widget class="QSlider" name="dcfSustainLevel_Slider">
                    <property name="orientation">
                     <enum>Qt::Vertical</enum>
                    </property>
@@ -2574,7 +2574,7 @@ p, li { white-space: pre-wrap; }
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_161">
                <item>
-                <widget class="QLCDNumber" name="releaseTimeLCD">
+                <widget class="QLCDNumber" name="dcfReleaseTimeLCD">
                  <property name="maximumSize">
                   <size>
                    <width>64</width>
@@ -2599,7 +2599,7 @@ p, li { white-space: pre-wrap; }
                   </spacer>
                  </item>
                  <item>
-                  <widget class="QSlider" name="releaseTime_Slider">
+                  <widget class="QSlider" name="dcfReleaseTime_Slider">
                    <property name="orientation">
                     <enum>Qt::Vertical</enum>
                    </property>
@@ -2650,7 +2650,7 @@ p, li { white-space: pre-wrap; }
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;Amplifier &lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;Envelop Gernerator&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;Amplifier &lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;Envelop Generator&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
           </widget>
          </item>
@@ -2684,7 +2684,7 @@ p, li { white-space: pre-wrap; }
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_162">
                <item>
-                <widget class="QLCDNumber" name="attackTime2kLCD">
+                <widget class="QLCDNumber" name="dcaAttackTimeLCD">
                  <property name="maximumSize">
                   <size>
                    <width>64</width>
@@ -2709,7 +2709,7 @@ p, li { white-space: pre-wrap; }
                   </spacer>
                  </item>
                  <item>
-                  <widget class="QSlider" name="attackTime2_Slider">
+                  <widget class="QSlider" name="dcaAttackTime_Slider">
                    <property name="orientation">
                     <enum>Qt::Vertical</enum>
                    </property>
@@ -2762,7 +2762,7 @@ p, li { white-space: pre-wrap; }
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_187">
                <item>
-                <widget class="QLCDNumber" name="decayTime2LCD">
+                <widget class="QLCDNumber" name="dcaDecayTimeLCD">
                  <property name="maximumSize">
                   <size>
                    <width>64</width>
@@ -2787,7 +2787,7 @@ p, li { white-space: pre-wrap; }
                   </spacer>
                  </item>
                  <item>
-                  <widget class="QSlider" name="decayTime2_Slider">
+                  <widget class="QSlider" name="dcaDecayTime_Slider">
                    <property name="orientation">
                     <enum>Qt::Vertical</enum>
                    </property>
@@ -2840,7 +2840,7 @@ p, li { white-space: pre-wrap; }
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_188">
                <item>
-                <widget class="QLCDNumber" name="sustainLevel2LCD">
+                <widget class="QLCDNumber" name="dcaSustainLevelLCD">
                  <property name="maximumSize">
                   <size>
                    <width>64</width>
@@ -2865,7 +2865,7 @@ p, li { white-space: pre-wrap; }
                   </spacer>
                  </item>
                  <item>
-                  <widget class="QSlider" name="sustainLevel2_Slider">
+                  <widget class="QSlider" name="dcaSustainLevel_Slider">
                    <property name="orientation">
                     <enum>Qt::Vertical</enum>
                    </property>
@@ -2918,7 +2918,7 @@ p, li { white-space: pre-wrap; }
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_190">
                <item>
-                <widget class="QLCDNumber" name="releaseTime2LCD">
+                <widget class="QLCDNumber" name="dcaReleaseTimeLCD">
                  <property name="maximumSize">
                   <size>
                    <width>64</width>
@@ -2943,7 +2943,7 @@ p, li { white-space: pre-wrap; }
                   </spacer>
                  </item>
                  <item>
-                  <widget class="QSlider" name="releaseTime2_Slider">
+                  <widget class="QSlider" name="dcaReleaseTime_Slider">
                    <property name="orientation">
                     <enum>Qt::Vertical</enum>
                    </property>
@@ -4451,7 +4451,7 @@ p, li { white-space: pre-wrap; }
               </size>
              </property>
              <property name="title">
-              <string>Switch 3.1</string>
+              <string>Velocity</string>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_168">
               <item>
@@ -5428,9 +5428,9 @@ p, li { white-space: pre-wrap; }
    </hints>
   </connection>
   <connection>
-   <sender>attackTime_Slider</sender>
+   <sender>dcfAttackTime_Slider</sender>
    <signal>valueChanged(int)</signal>
-   <receiver>attackTimeLCD0</receiver>
+   <receiver>dcfAttackTimeLCD</receiver>
    <slot>display(int)</slot>
    <hints>
     <hint type="sourcelabel">
@@ -5444,9 +5444,9 @@ p, li { white-space: pre-wrap; }
    </hints>
   </connection>
   <connection>
-   <sender>decaytTme_Slider</sender>
+   <sender>dcfDecayTime_Slider</sender>
    <signal>valueChanged(int)</signal>
-   <receiver>decaytTmeLCD</receiver>
+   <receiver>dcfDecayTimeLCD</receiver>
    <slot>display(int)</slot>
    <hints>
     <hint type="sourcelabel">
@@ -5460,9 +5460,9 @@ p, li { white-space: pre-wrap; }
    </hints>
   </connection>
   <connection>
-   <sender>sustainLevel_Slider</sender>
+   <sender>dcfSustainLevel_Slider</sender>
    <signal>valueChanged(int)</signal>
-   <receiver>sustainLevelLCD</receiver>
+   <receiver>dcfSustainLevelLCD</receiver>
    <slot>display(int)</slot>
    <hints>
     <hint type="sourcelabel">
@@ -5476,9 +5476,9 @@ p, li { white-space: pre-wrap; }
    </hints>
   </connection>
   <connection>
-   <sender>releaseTime_Slider</sender>
+   <sender>dcfReleaseTime_Slider</sender>
    <signal>valueChanged(int)</signal>
-   <receiver>releaseTimeLCD</receiver>
+   <receiver>dcfReleaseTimeLCD</receiver>
    <slot>display(int)</slot>
    <hints>
     <hint type="sourcelabel">
@@ -5492,9 +5492,9 @@ p, li { white-space: pre-wrap; }
    </hints>
   </connection>
   <connection>
-   <sender>attackTime2_Slider</sender>
+   <sender>dcaAttackTime_Slider</sender>
    <signal>valueChanged(int)</signal>
-   <receiver>attackTime2kLCD</receiver>
+   <receiver>dcaAttackTimeLCD</receiver>
    <slot>display(int)</slot>
    <hints>
     <hint type="sourcelabel">
@@ -5508,9 +5508,9 @@ p, li { white-space: pre-wrap; }
    </hints>
   </connection>
   <connection>
-   <sender>decayTime2_Slider</sender>
+   <sender>dcaDecayTime_Slider</sender>
    <signal>valueChanged(int)</signal>
-   <receiver>decayTime2LCD</receiver>
+   <receiver>dcaDecayTimeLCD</receiver>
    <slot>display(int)</slot>
    <hints>
     <hint type="sourcelabel">
@@ -5524,9 +5524,9 @@ p, li { white-space: pre-wrap; }
    </hints>
   </connection>
   <connection>
-   <sender>sustainLevel2_Slider</sender>
+   <sender>dcaSustainLevel_Slider</sender>
    <signal>valueChanged(int)</signal>
-   <receiver>sustainLevel2LCD</receiver>
+   <receiver>dcaSustainLevelLCD</receiver>
    <slot>display(int)</slot>
    <hints>
     <hint type="sourcelabel">
@@ -5540,9 +5540,9 @@ p, li { white-space: pre-wrap; }
    </hints>
   </connection>
   <connection>
-   <sender>releaseTime2_Slider</sender>
+   <sender>dcaReleaseTime_Slider</sender>
    <signal>valueChanged(int)</signal>
-   <receiver>releaseTime2LCD</receiver>
+   <receiver>dcaReleaseTimeLCD</receiver>
    <slot>display(int)</slot>
    <hints>
     <hint type="sourcelabel">
