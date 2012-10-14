@@ -3007,7 +3007,7 @@ p, li { white-space: pre-wrap; }
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;Knobs 1 -4&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;Knobs 1 - 4&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
           </widget>
          </item>
@@ -3028,13 +3028,13 @@ p, li { white-space: pre-wrap; }
               </size>
              </property>
              <property name="title">
-              <string>PWM Depth</string>
+              <string>LFO 2 Rate</string>
              </property>
              <layout class="QHBoxLayout" name="horizontalLayout_81">
               <item>
                <layout class="QVBoxLayout" name="verticalLayout_213">
                 <item>
-                 <widget class="QLCDNumber" name="pwmDepthLCD">
+                 <widget class="QLCDNumber" name="lfo2FreqLCD">
                   <property name="maximumSize">
                    <size>
                     <width>64</width>
@@ -3059,7 +3059,7 @@ p, li { white-space: pre-wrap; }
                    </spacer>
                   </item>
                   <item>
-                   <widget class="QDial" name="pwmDepth_Dial">
+                   <widget class="QDial" name="lfo2Freq_Dial">
                     <property name="minimumSize">
                      <size>
                       <width>50</width>
@@ -3109,13 +3109,13 @@ p, li { white-space: pre-wrap; }
               </size>
              </property>
              <property name="title">
-              <string>Knob 2</string>
+              <string>PWM Depth</string>
              </property>
              <layout class="QHBoxLayout" name="horizontalLayout_83">
               <item>
                <layout class="QVBoxLayout" name="verticalLayout_214">
                 <item>
-                 <widget class="QLCDNumber" name="midiKnob2LCD">
+                 <widget class="QLCDNumber" name="pwmDepthLCD">
                   <property name="maximumSize">
                    <size>
                     <width>64</width>
@@ -3140,7 +3140,7 @@ p, li { white-space: pre-wrap; }
                    </spacer>
                   </item>
                   <item>
-                   <widget class="QDial" name="midiKnob2_Dial">
+                   <widget class="QDial" name="pwmDepth_Dial">
                     <property name="minimumSize">
                      <size>
                       <width>50</width>
@@ -3190,13 +3190,13 @@ p, li { white-space: pre-wrap; }
               </size>
              </property>
              <property name="title">
-              <string>Knob 3</string>
+              <string>FM Depth</string>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_22">
               <item>
                <layout class="QVBoxLayout" name="verticalLayout_215">
                 <item>
-                 <widget class="QLCDNumber" name="midiKnob3LCD">
+                 <widget class="QLCDNumber" name="fmDepthLCD">
                   <property name="maximumSize">
                    <size>
                     <width>64</width>
@@ -3221,7 +3221,7 @@ p, li { white-space: pre-wrap; }
                    </spacer>
                   </item>
                   <item>
-                   <widget class="QDial" name="midiKnob3_Dial">
+                   <widget class="QDial" name="fmDepth_Dial">
                     <property name="minimumSize">
                      <size>
                       <width>50</width>
@@ -3384,13 +3384,13 @@ p, li { white-space: pre-wrap; }
               </size>
              </property>
              <property name="title">
-              <string>LFO 2 Rate</string>
+              <string>Knob 5</string>
              </property>
              <layout class="QHBoxLayout" name="horizontalLayout_88">
               <item>
                <layout class="QVBoxLayout" name="verticalLayout_217">
                 <item>
-                 <widget class="QLCDNumber" name="lfo2FreqLCD">
+                 <widget class="QLCDNumber" name="midiKnob5LCD">
                   <property name="maximumSize">
                    <size>
                     <width>64</width>
@@ -3415,7 +3415,7 @@ p, li { white-space: pre-wrap; }
                    </spacer>
                   </item>
                   <item>
-                   <widget class="QDial" name="lfo2Freq_Dial">
+                   <widget class="QDial" name="midiKnob5_Dial">
                     <property name="minimumSize">
                      <size>
                       <width>50</width>
@@ -3465,13 +3465,13 @@ p, li { white-space: pre-wrap; }
               </size>
              </property>
              <property name="title">
-              <string>FM Depth</string>
+              <string>Knob 6</string>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_23">
               <item>
                <layout class="QVBoxLayout" name="verticalLayout_218">
                 <item>
-                 <widget class="QLCDNumber" name="fmDepthLCD">
+                 <widget class="QLCDNumber" name="midiKnob6LCD">
                   <property name="maximumSize">
                    <size>
                     <width>64</width>
@@ -3496,7 +3496,7 @@ p, li { white-space: pre-wrap; }
                    </spacer>
                   </item>
                   <item>
-                   <widget class="QDial" name="fmDepth_Dial">
+                   <widget class="QDial" name="midiKnob6_Dial">
                     <property name="minimumSize">
                      <size>
                       <width>50</width>
@@ -5316,9 +5316,9 @@ p, li { white-space: pre-wrap; }
    </hints>
   </connection>
   <connection>
-   <sender>midiKnob2_Dial</sender>
+   <sender>midiKnob4_Dial</sender>
    <signal>valueChanged(int)</signal>
-   <receiver>midiKnob2LCD</receiver>
+   <receiver>midiKnob4LCD</receiver>
    <slot>display(int)</slot>
    <hints>
     <hint type="sourcelabel">
@@ -5332,9 +5332,9 @@ p, li { white-space: pre-wrap; }
    </hints>
   </connection>
   <connection>
-   <sender>midiKnob3_Dial</sender>
+   <sender>midiKnob5_Dial</sender>
    <signal>valueChanged(int)</signal>
-   <receiver>midiKnob3LCD</receiver>
+   <receiver>midiKnob5LCD</receiver>
    <slot>display(int)</slot>
    <hints>
     <hint type="sourcelabel">
@@ -5348,9 +5348,9 @@ p, li { white-space: pre-wrap; }
    </hints>
   </connection>
   <connection>
-   <sender>midiKnob4_Dial</sender>
+   <sender>midiKnob6_Dial</sender>
    <signal>valueChanged(int)</signal>
-   <receiver>midiKnob4LCD</receiver>
+   <receiver>midiKnob6LCD</receiver>
    <slot>display(int)</slot>
    <hints>
     <hint type="sourcelabel">

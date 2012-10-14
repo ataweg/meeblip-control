@@ -22,14 +22,14 @@ class MainWindow(QtGui.QMainWindow):
         self.offValue = 0
         #control change values
         self.dialDict = {
-                         'pwmDepth_Dial':           14,   # PWMDEPTH        = MIDICC + $0E ; Knob 1 14    ; (=LFO2LEVEL)
-                         'midiKnob2_Dial':          15,   # MIDI_KNOB_2     = MIDICC + $0F ; Knob 2 15
-                         'midiKnob3_Dial':          16,   # MIDI_KNOB_3     = MIDICC + $10 ; Knob 3 16
-                         'midiKnob4_Dial':          17,   # MIDI_KNOB_4     = MIDICC + $11 ; Knob 4 17
-                         'lfo2Freq_Dial':           18,   # LFO2FREQ        = MIDICC + $12 ; Knob 5 18    ; currently not used
-                         'fmDepth_Dial':            19,   # FMDEPTH         = MIDICC + $13 ; Knob 6 19    ; currently not used
-                         'mixerBalance_Dial':       20,   # MIXER_BALANCE   = MIDICC + $14 ; Knob 7 20
-                         'masterVolume_Dial':       21,   # MASTER_VOLUME   = MIDICC + $15 ; Knob 8 21
+                         'lfo2Freq_Dial':           18,   # LFO2FREQ        = MIDICC + $0E ; Knob 1    14 ; 0..255	 (PULSE_KNOB)
+                         'pwmDepth_Dial':           14,   # PWMDEPTH        = MIDICC + $0F ; Knob 2    15 ; 0..255	 (=LFO2LEVEL)
+                         'fmDepth_Dial':            19,   # FMDEPTH         = MIDICC + $10 ; Knob 3    16 ; 0..255
+                         'midiKnob4_Dial':          15,   # MIDI_KNOB_4     = MIDICC + $11 ; Knob 4    17 ; 0..255
+                         'midiKnob5_Dial':          16,   # MIDI_KNOB_5     = MIDICC + $12 ; Knob 5    18 ; 0..255
+                         'midiKnob6_Dial':          17,   # MIDI_KNOB_6     = MIDICC + $13 ; Knob 6    19 ; 0..255
+                         'mixerBalance_Dial':       20,   # MIXER_BALANCE   = MIDICC + $14 ; Knob 7    20 ; -128..+127
+                         'masterVolume_Dial':       21,   # MASTER_VOLUME   = MIDICC + $15 ; Knob 8    21 ; 0..255
 
                          'dcfAttackTime_Slider':    22,   # ATTACKTIME2     = MIDICC + $16 ; _Slider 1 22 ; DCF envelope
                          'dcfDecayTime_Slider':     23,   # DECAYTIME2      = MIDICC + $17 ; _Slider 2 23
