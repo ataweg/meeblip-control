@@ -22,12 +22,12 @@ class MainWindow(QtGui.QMainWindow):
         self.offValue = 0
         #control change values
         self.dialDict = {
-                         'lfo2Freq_Dial':           18,   # LFO2FREQ        = MIDICC + $0E ; Knob 1    14 ; 0..255	 (PULSE_KNOB)
-                         'pwmDepth_Dial':           14,   # PWMDEPTH        = MIDICC + $0F ; Knob 2    15 ; 0..255	 (=LFO2LEVEL)
-                         'fmDepth_Dial':            19,   # FMDEPTH         = MIDICC + $10 ; Knob 3    16 ; 0..255
-                         'midiKnob4_Dial':          15,   # MIDI_KNOB_4     = MIDICC + $11 ; Knob 4    17 ; 0..255
-                         'midiKnob5_Dial':          16,   # MIDI_KNOB_5     = MIDICC + $12 ; Knob 5    18 ; 0..255
-                         'midiKnob6_Dial':          17,   # MIDI_KNOB_6     = MIDICC + $13 ; Knob 6    19 ; 0..255
+                         'lfo2Freq_Dial':           14,   # LFO2FREQ        = MIDICC + $0E ; Knob 1    14 ; 0..255	 (PULSE_KNOB)
+                         'pwmDepth_Dial':           15,   # PWMDEPTH        = MIDICC + $0F ; Knob 2    15 ; 0..255	 (=LFO2LEVEL)
+                         'fmDepth_Dial':            16,   # FMDEPTH         = MIDICC + $10 ; Knob 3    16 ; 0..255
+                         'midiKnob4_Dial':          17,   # MIDI_KNOB_4     = MIDICC + $11 ; Knob 4    17 ; 0..255
+                         'midiKnob5_Dial':          18,   # MIDI_KNOB_5     = MIDICC + $12 ; Knob 5    18 ; 0..255
+                         'midiKnob6_Dial':          19,   # MIDI_KNOB_6     = MIDICC + $13 ; Knob 6    19 ; 0..255
                          'mixerBalance_Dial':       20,   # MIXER_BALANCE   = MIDICC + $14 ; Knob 7    20 ; -128..+127
                          'masterVolume_Dial':       21,   # MASTER_VOLUME   = MIDICC + $15 ; Knob 8    21 ; 0..255
 

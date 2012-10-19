@@ -19,7 +19,7 @@ p7
 p8
 S'QString'
 p9
-(VNew- Bass-LFO-Drone
+(VNew-Bass-LFO-Drone
 p10
 tp11
 tp12
@@ -28,22 +28,22 @@ sS'patchMIDIMapDict'
 p14
 (dp15
 I14
-S'pwmDepth_Dial'
+S'lfo2Freq_Dial'
 p16
 sI15
-S'midiKnob2_Dial'
+S'pwmDepth_Dial'
 p17
 sI16
-S'midiKnob3_Dial'
+S'fmDepth_Dial'
 p18
 sI17
 S'midiKnob4_Dial'
 p19
 sI18
-S'lfo2Freq_Dial'
+S'midiKnob5_Dial'
 p20
 sI19
-S'fmDepth_Dial'
+S'midiKnob6_Dial'
 p21
 sI20
 S'mixerBalance_Dial'
