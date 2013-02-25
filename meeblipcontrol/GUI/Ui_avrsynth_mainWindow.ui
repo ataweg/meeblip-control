@@ -1066,7 +1066,7 @@ p, li { white-space: pre-wrap; }
                <property name="title">
                 <string>Resonance</string>
                </property>
-               <layout class="QHBoxLayout" name="horizontalLayout">
+               <layout class="QHBoxLayout" name="horizontalLayout_1">
                 <item>
                  <layout class="QVBoxLayout" name="verticalLayout_62">
                   <item>
@@ -1147,7 +1147,7 @@ p, li { white-space: pre-wrap; }
                <property name="title">
                 <string>Env. Amount</string>
                </property>
-               <layout class="QVBoxLayout" name="verticalLayout">
+               <layout class="QHBoxLayout" name="horizontalLayout">
                 <item>
                  <layout class="QVBoxLayout" name="verticalLayout_61">
                   <item>
@@ -3192,7 +3192,7 @@ p, li { white-space: pre-wrap; }
              <property name="title">
               <string>FM Depth</string>
              </property>
-             <layout class="QVBoxLayout" name="verticalLayout_22">
+             <layout class="QHBoxLayout" name="horizontalLayout_22">
               <item>
                <layout class="QVBoxLayout" name="verticalLayout_215">
                 <item>
@@ -3467,7 +3467,7 @@ p, li { white-space: pre-wrap; }
              <property name="title">
               <string>Knob 6</string>
              </property>
-             <layout class="QVBoxLayout" name="verticalLayout_23">
+             <layout class="QHBoxLayout" name="horizontalLayout_23">
               <item>
                <layout class="QVBoxLayout" name="verticalLayout_218">
                 <item>
@@ -3629,7 +3629,7 @@ p, li { white-space: pre-wrap; }
              <property name="title">
               <string>Master Volume</string>
              </property>
-             <layout class="QVBoxLayout" name="verticalLayout_24">
+             <layout class="QHBoxLayout" name="horizontalLayout_24">
               <item>
                <layout class="QVBoxLayout" name="verticalLayout_220">
                 <item>
@@ -3894,7 +3894,7 @@ p, li { white-space: pre-wrap; }
               </size>
              </property>
              <property name="title">
-              <string>Switch 4.2</string>
+              <string>Arpeggiator</string>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_197">
               <item>
@@ -3969,7 +3969,7 @@ p, li { white-space: pre-wrap; }
               </size>
              </property>
              <property name="title">
-              <string>Switch 4.3</string>
+              <string>Arp Repeat</string>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_20">
               <item>
@@ -4526,7 +4526,7 @@ p, li { white-space: pre-wrap; }
               </size>
              </property>
              <property name="title">
-              <string>Switch 3.2</string>
+              <string>DCA Mode</string>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_171">
               <item>
@@ -4549,7 +4549,7 @@ p, li { white-space: pre-wrap; }
                   <item>
                    <widget class="QRadioButton" name="switch32On">
                     <property name="text">
-                     <string>On</string>
+                     <string>Env</string>
                     </property>
                     <attribute name="buttonGroup">
                      <string notr="true">switch32Group</string>
@@ -4559,7 +4559,7 @@ p, li { white-space: pre-wrap; }
                   <item>
                    <widget class="QRadioButton" name="switch32Off">
                     <property name="text">
-                     <string>Off</string>
+                     <string>Gate</string>
                     </property>
                     <attribute name="buttonGroup">
                      <string notr="true">switch32Group</string>
@@ -4601,7 +4601,7 @@ p, li { white-space: pre-wrap; }
               </size>
              </property>
              <property name="title">
-              <string>Transpose</string>
+              <string>DCA open</string>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_14">
               <item>
@@ -4676,7 +4676,7 @@ p, li { white-space: pre-wrap; }
               </size>
              </property>
              <property name="title">
-              <string>DCA Mode</string>
+              <string>Transpose</string>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_176">
               <item>
@@ -4699,7 +4699,7 @@ p, li { white-space: pre-wrap; }
                   <item>
                    <widget class="QRadioButton" name="switch34On">
                     <property name="text">
-                     <string>On</string>
+                     <string>Up</string>
                     </property>
                     <attribute name="buttonGroup">
                      <string notr="true">switch34Group</string>
@@ -4709,7 +4709,7 @@ p, li { white-space: pre-wrap; }
                   <item>
                    <widget class="QRadioButton" name="switch34Off">
                     <property name="text">
-                     <string>Off</string>
+                     <string>Down</string>
                     </property>
                     <attribute name="buttonGroup">
                      <string notr="true">switch34Group</string>

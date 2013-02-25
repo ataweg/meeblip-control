@@ -2,6 +2,12 @@
 Created on Mar 20, 2012
 
 @author: Matt
+
+changes
+   2013-01-22   AWe   add passthru menu list
+   2012-10-25   AWe   extend for use with avrSynth and QX49 Keyboard
+                      new user controls (knobs, sliders, switches)
+                      load default patch file on startup
 '''
 import sys
 import hashlib
@@ -17,6 +23,7 @@ class MainWindow(QtGui.QMainWindow):
         super(MainWindow, self).__init__(parent)
         self.midiOutputDevicesDict = {}
         self.midiInputDevicesDict = {}
+        self.midiPassthruDevicesDict = {}
         self.midiEnable = 0
         self.onValue = 64
         self.offValue = 0
@@ -82,20 +89,20 @@ class MainWindow(QtGui.QMainWindow):
                            'oscAPWMOn':         [79, self.onValue], 'oscASawOn':         [79, self.offValue],   # S_OSCA_WAVE       = MIDICC + $4F
 
                            'switch30On':        [80, self.onValue], 'switch30Off':       [80, self.offValue],   # S_MIX_RING        = MIDICC + $50
-                           'switch31On':        [81, self.onValue], 'switch31Off':       [81, self.offValue],   # S_USER_3_1        = MIDICC + $51
-                           'switch32On':        [82, self.onValue], 'switch32Off':       [82, self.offValue],   # S_USER_3_2        = MIDICC + $52
-                           'switch33On':        [83, self.onValue], 'switch33Off':       [83, self.offValue],   # S_TRANSPOSE       = MIDICC + $53
-                           'switch34On':        [84, self.onValue], 'switch34Off':       [84, self.offValue],   # S_DCA_MODE        = MIDICC + $54
-                           'switch35On':        [85, self.onValue], 'switch35Off':       [85, self.offValue],   # S_MODWHEEL_ENABLE = MIDICC + $55
+                           'switch31On':        [81, self.onValue], 'switch31Off':       [81, self.offValue],   # S_VELOCITY        = MIDICC + $51
+                           'switch32On':        [82, self.onValue], 'switch32Off':       [82, self.offValue],   # S_DCA_MODE        = MIDICC + $52
+                           'switch33On':        [83, self.onValue], 'switch33Off':       [83, self.offValue],   # S_DCA_OPEN        = MIDICC + $53
+                           'switch34On':        [84, self.onValue], 'switch34Off':       [84, self.offValue],   # S_TRANSPOSE       = MIDICC + $54
+                           'switch35On':        [85, self.onValue], 'switch35Off':       [85, self.offValue],   # S_MODWHEEL_ENA    = MIDICC + $55
                            'switch36On':        [86, self.onValue], 'switch36Off':       [86, self.offValue],   # S_LFO_KBD_SYNC    = MIDICC + $56
                            'switch37On':        [87, self.onValue], 'switch37Off':       [87, self.offValue],   # S_DCF_KBD_TRACK   = MIDICC + $57
 
                            'switch40On':        [88, self.onValue], 'switch40Off':       [88, self.offValue],   # S_USER_4_0        = MIDICC + $58
                            'switch41On':        [89, self.onValue], 'switch41Off':       [89, self.offValue],   # S_USER_4_1        = MIDICC + $59
-                           'switch42On':        [90, self.onValue], 'switch42Off':       [90, self.offValue],   # S_USER_4_2        = MIDICC + $5A
-                           'switch43On':        [91, self.onValue], 'switch43Off':       [91, self.offValue],   # S_USER_4_3        = MIDICC + $5B
-                           'switch44On':        [92, self.onValue], 'switch44Off':       [92, self.offValue],   # S_USER_4_4        = MIDICC + $5C
-                           'switch45On':        [93, self.onValue], 'switch45Off':       [93, self.offValue],   # S_USER_4_5        = MIDICC + $5D
+                           'switch42On':        [90, self.onValue], 'switch42Off':       [90, self.offValue],   # S_ARP_ENABLE        = MIDICC + $5A
+                           'switch43On':        [91, self.onValue], 'switch43Off':       [91, self.offValue],   # S_ARP_REPEAT        = MIDICC + $5B
+                           'switch44On':        [92, self.onValue], 'switch44Off':       [92, self.offValue],   # S_USER_4_4         = MIDICC + $5C
+                           'switch45On':        [93, self.onValue], 'switch45Off':       [93, self.offValue],   # S_USER_4_5         = MIDICC + $5D
                            'switch46On':        [94, self.onValue], 'switch46Off':       [94, self.offValue],   # S_LFO2_WAVE       = MIDICC + $5E
                            'switch47On':        [95, self.onValue], 'switch47Off':       [95, self.offValue]}   # S_LFO2_RANDOM     = MIDICC + $5F
 
@@ -141,6 +148,7 @@ class MainWindow(QtGui.QMainWindow):
         self.ui.setupUi(self)
         self.windowHandler = MainWindowHandler(self.dialDict, self.buttonDict)
         self.settings = QtCore.QSettings('MeeblipControl', 'MeeblipControl')
+
         #connect signals and slots
         for dial, cc, in self.dialDict.iteritems():
             currentDial = getattr(self.ui, dial)
@@ -149,10 +157,12 @@ class MainWindow(QtGui.QMainWindow):
             currentDial.valueChanged.connect(dialChanged)
             currentDial.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
             currentDial.customContextMenuRequested.connect(partial(self.windowHandler.contextMenu, mainWindowInstance=self, widgetName=dial))
+
         for button, buttonList in self.buttonDict.iteritems():
             currentButton = getattr(self.ui, button)
             buttonFunc = partial(self.windowHandler.buttonChanged, mainWindowInstance=self, value=buttonList[1], cc=buttonList[0], button=currentButton)
             currentButton.toggled.connect(buttonFunc)
+
         for buttonGroupBox in self.buttonBoxDict.keys():
             currentGroup = getattr(self.ui, buttonGroupBox)
             currentGroup.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
@@ -164,7 +174,7 @@ class MainWindow(QtGui.QMainWindow):
 # ---------------------------------------------------------------------------
 
         class _MidiInput(QtCore.QThread):
-            dataReceivedSignal = QtCore.pyqtSignal(int, int)
+            dataReceivedSignal = QtCore.pyqtSignal(int, int, int)
             midiExceptionSignal = QtCore.pyqtSignal(str)
 
             def __init__(self, mainWindow, mainWindowHandler, parent=None):
@@ -177,20 +187,36 @@ class MainWindow(QtGui.QMainWindow):
                     if self.mainWindowHandler.midiSelectedInputDevicesDict:
                         try:
                             self.mainWindowHandler.midiInputMutex.lock()
-                            for inputDevice in self.mainWindowHandler.midiSelectedInputDevicesDict.values():
+                            for inputDeviceIndex in self.mainWindowHandler.midiSelectedInputDevicesDict.keys():
+                                inputDevice = self.mainWindowHandler.midiSelectedInputDevicesDict[ inputDeviceIndex]
                                 if inputDevice.poll():
                                     data = inputDevice.read(1)
                                     channel = (data[0][0][0] & 0xF) + 1
+
+                                    # check for midi passthru
+                                    enable_midi = 0
+                                    if self.mainWindowHandler.midiSelectedPassthruDevicesDict:
+                                        for passthruDeviceIndex in self.mainWindowHandler.midiSelectedPassthruDevicesDict.keys():
+                                            if passthruDeviceIndex == inputDeviceIndex :
+                                                enable_midi = 1
+
                                     if channel == self.mainWindowHandler.midiInputChannel:
                                         status = data[0][0][0] & 0xF0
                                         cc = data[0][0][1]
                                         #if a CC message arrives and is mapped
                                         if status == 0xB0 and cc in self.mainWindowHandler.currentPatch.patchMIDIMapDict:
                                             value = data[0][0][2]
-                                            self.dataReceivedSignal.emit(cc, value)
+                                            self.dataReceivedSignal.emit(cc, value, enable_midi)
                                         else:
-                                            if self.mainWindowHandler.midiSelectedOutputDevice:
+                                            if self.mainWindowHandler.midiSelectedOutputDevice and enable_midi != 0:
                                                 self.mainWindowHandler.midiSelectedOutputDevice.write(data)
+
+# here we got an exception when closing application
+#  Traceback (most recent call last):
+#    File "..\source\meeblipControl.py", line 209, in run
+#      except midi.MidiException as e:
+#  close failed in file object destructor:
+#  Error in sys.excepthook:
 
                         except midi.MidiException as e:
                             self.midiExceptionSignal.emit(unicode(e))
@@ -213,12 +239,15 @@ class MainWindow(QtGui.QMainWindow):
         self.restoreSettings(self.windowHandler)
         self.midiEnable = 1
         self.windowHandler.new(self)
+        self.windowHandler.load_default(self, "default.mee")
 
 # ---------------------------------------------------------------------------
 #
 # ---------------------------------------------------------------------------
 
-    def midiInputCallback(self, cc, value):
+    def midiInputCallback(self, cc, value, enable_midi):
+        midiEnable_status = self.midiEnable
+        self.midiEnable = enable_midi
         widgetName = self.windowHandler.currentPatch.patchMIDIMapDict[cc]
         if widgetName in self.dialDict:
             getattr(self.ui, widgetName).setValue(value)
@@ -236,13 +265,13 @@ class MainWindow(QtGui.QMainWindow):
                     if button != checkedButton:
                         button.toggle()
 
-# ---------------------------------------------------------------------------
-#
-# ---------------------------------------------------------------------------
+        self.midiEnable = midiEnable_status
+
 
     def getMIDIDevices(self):
         midiOutputDevices = []
         midiInputDevices = []
+        midiPassthruDevices = []
         for index in xrange(0, midi.get_count()):
             device = midi.get_device_info(index)
             deviceName = device[1]
@@ -260,12 +289,21 @@ class MainWindow(QtGui.QMainWindow):
                 midiInputDevices.append(deviceWidget)
                 self.midiInputDevicesDict[deviceWidget] = index
 
+                setattr(self, deviceName, QtGui.QAction(QtGui.QIcon(''), deviceName, self))
+                deviceWidget = getattr(self, deviceName)
+                deviceWidget.setCheckable(True)
+                midiPassthruDevices.append(deviceWidget)
+                self.midiPassthruDevicesDict[deviceWidget] = index
+
         if midiOutputDevices:
             self.ui.midiOutputDevicesMenu = self.ui.menubar.addMenu("&Midi Output Device")
             self.ui.midiOutputDevicesMenu.addActions(midiOutputDevices)
         if midiInputDevices:
             self.ui.midiInputDevicesMenu = self.ui.menubar.addMenu("&Midi Input Devices")
             self.ui.midiInputDevicesMenu.addActions(midiInputDevices)
+        if midiPassthruDevices:
+            self.ui.midiPassthruDevicesMenu = self.ui.menubar.addMenu("&Midi Passthru Devices")
+            self.ui.midiPassthruDevicesMenu.addActions(midiPassthruDevices)
 
         for device in midiOutputDevices:
             outputFunction = partial(self.windowHandler.midiOutputSelect, mainWindowInstance=self, device=device)
@@ -274,6 +312,10 @@ class MainWindow(QtGui.QMainWindow):
         for device in midiInputDevices:
             inputFunction = partial(self.windowHandler.midiInputSelect, mainWindowInstance=self, device=device)
             device.triggered.connect(inputFunction)
+
+        for device in midiPassthruDevices:
+            passthruFunction = partial(self.windowHandler.midiPassthruSelect, mainWindowInstance=self, device=device)
+            device.triggered.connect(passthruFunction)
 
 # ---------------------------------------------------------------------------
 #
@@ -288,8 +330,9 @@ class MainWindow(QtGui.QMainWindow):
     def restoreSettings(self, mainWindowHandler):
         mainWindowHandler.midiInputChannel = self.settings.value('midiInputChannel').toInt()[0]
         if not mainWindowHandler.midiInputChannel:
-            self.midiInputChannel = 1
-        self.midiOutputChannel = self.settings.value('midiOutputChannel').toInt()[0]
+            mainWindowHandler.midiInputChannel = 1
+
+        mainWindowHandler.midiOutputChannel = self.settings.value('midiOutputChannel').toInt()[0]
         if not mainWindowHandler.midiOutputChannel:
             mainWindowHandler.midiOutputChannel = 1
 
@@ -304,6 +347,19 @@ class MainWindow(QtGui.QMainWindow):
                     self.windowHandler.midiInputSelect(self, deviceWidget)
                     registryInputDeviceList.append(deviceHash)
         self.settings.setValue('midiInputDevices', registryInputDeviceList)
+
+        registryPassthruDeviceList = []
+        for passthruDeviceHash in self.settings.value('midiPassthruDevices', []).toList():
+            passthruDeviceHash = str(passthruDeviceHash.toString())
+            for deviceWidget, index in self.midiPassthruDevicesDict.iteritems():
+                deviceName = midi.get_device_info(index)[1]
+                deviceHash = hashlib.md5(deviceName).hexdigest()
+                if deviceHash == passthruDeviceHash:
+                    deviceWidget.setChecked(True)
+                    self.windowHandler.midiPassthruSelect(self, deviceWidget)
+                    registryPassthruDeviceList.append(deviceHash)
+        self.settings.setValue('midiPassthruDevices', registryPassthruDeviceList)
+
         #update the registry so unplugged devices aren't
         #reselected when plugged back in at some later time
         outputDeviceHash = str(self.settings.value('midiOutputDevice').toString())
@@ -340,6 +396,7 @@ class MainWindow(QtGui.QMainWindow):
     @QtCore.pyqtSignature("")
     def on_action_New_triggered(self):
         self.windowHandler.new(self)
+        self.windowHandler.load_default(self, "default.mee")
 
     @QtCore.pyqtSignature("")
     def on_action_Export_patch_as_MIDI_triggered(self):

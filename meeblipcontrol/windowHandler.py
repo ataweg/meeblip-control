@@ -2,6 +2,12 @@
 Created on Mar 20, 2012
 
 @author: bitrex@earthlink.net
+changes
+   2013-01-22   AWe   add passthru menu list
+   2012-10-25   AWe   extend for use with avrSynth and QX49 Keyboard
+                      add function sendMidi(): disable midi ouptput
+                        to prevend sending midi message twice
+                      add function load_default()
 '''
 from PyQt4 import QtGui, QtCore
 from optionsDialog import optionsDialog
@@ -11,6 +17,7 @@ import pickle
 from functools import partial
 import midi as midiwrite
 import hashlib
+import os
 
 class MainWindowHandler(object):
     '''
@@ -23,6 +30,7 @@ class MainWindowHandler(object):
         self.dialDict = dialDict
         self.buttonDict = buttonDict
         self.midiSelectedInputDevicesDict = {}
+        self.midiSelectedPassthruDevicesDict = {}
         self.midiSelectedOutputDevice = None
         self.midiOutputChannel = None
         self.midiInputChannel = None
@@ -106,11 +114,27 @@ class MainWindowHandler(object):
                 mainWindowInstance.midiInputDevicesDict.pop(device)
                 mainWindowInstance.ui.midiInputDevicesMenu.removeAction(device)
 
-
         deviceNameList = []
         for deviceIndex in self.midiSelectedInputDevicesDict.keys():
             deviceNameList.append(hashlib.md5(midi.get_device_info(deviceIndex)[1]).hexdigest())
         mainWindowInstance.settings.setValue('midiInputDevices', deviceNameList)
+
+# ---------------------------------------------------------------------------
+#
+# ---------------------------------------------------------------------------
+
+    def midiPassthruSelect(self, mainWindowInstance, device):
+        deviceIndex = mainWindowInstance.midiPassthruDevicesDict[device]
+        if not device.isChecked():
+            self.midiSelectedPassthruDevicesDict.pop(deviceIndex)
+            device.setChecked(False)
+        else:
+            self.midiSelectedPassthruDevicesDict[deviceIndex] = deviceIndex
+
+        deviceNameList = []
+        for deviceIndex in self.midiSelectedPassthruDevicesDict.keys():
+            deviceNameList.append(hashlib.md5(midi.get_device_info(deviceIndex)[1]).hexdigest())
+        mainWindowInstance.settings.setValue('midiPassthruDevices', deviceNameList)
 
 # ---------------------------------------------------------------------------
 #
@@ -124,17 +148,17 @@ class MainWindowHandler(object):
                 outputDevice.setChecked(False)
             else:
                 if outputDevice.isChecked():
-                            try:
-                                self.midiSelectedOutputDevice = midi.Output(deviceIndex)
-                                if not self.midiSelectedOutputDevice:
-                                    raise Exception
-                                mainWindowInstance.settings.setValue('midiOutputDevice', hashlib.md5(midi.get_device_info(deviceIndex)[1]).hexdigest())
-                            except midi.MidiException as e:
-                                QtGui.QMessageBox.warning(mainWindowInstance, "MIDI Error", unicode(e))
-                            except:
-                                QtGui.QMessageBox.warning(mainWindowInstance, "MIDI Error", "Device error.")
-                                mainWindowInstance.midiOutputDevicesDict.pop(device)
-                                mainWindowInstance.ui.midiOutputDevicesMenu.removeAction(device)
+                    try:
+                        self.midiSelectedOutputDevice = midi.Output(deviceIndex)
+                        if not self.midiSelectedOutputDevice:
+                            raise Exception
+                        mainWindowInstance.settings.setValue('midiOutputDevice', hashlib.md5(midi.get_device_info(deviceIndex)[1]).hexdigest())
+                    except midi.MidiException as e:
+                        QtGui.QMessageBox.warning(mainWindowInstance, "MIDI Error", unicode(e))
+                    except:
+                        QtGui.QMessageBox.warning(mainWindowInstance, "MIDI Error", "Device error.")
+                        mainWindowInstance.midiOutputDevicesDict.pop(device)
+                        mainWindowInstance.ui.midiOutputDevicesMenu.removeAction(device)
                 else:
                     try:
                         self.midiSelectedOutputDevice.close()
@@ -296,25 +320,58 @@ class MainWindowHandler(object):
 #
 # ---------------------------------------------------------------------------
 
+    def load_default(self, mainWindowInstance, filename = "default.mee"):
+
+        path = os.getcwd()  # not used yet
+
+
+        try:
+            if filename:
+                with open(filename, "rb") as f:
+                    try:
+                        self.currentPatch = pickle.load(f)
+                        self.restorePatchSettings(mainWindowInstance, self.currentPatch)
+                        self.currentFile = filename
+                    except IOError as (errno, strerror):
+                        QtGui.QMessageBox.warning(mainWindowInstance, "File read error: %s" % errno,
+                                      "Error reading from file %s:\n %s" % (unicode(filename), (unicode(strerror))))
+                    except:
+                        QtGui.QMessageBox.warning(mainWindowInstance, "File read error", "Unknown error reading from file %s." % unicode(filename))
+
+        except IOError as (errno, strerror):
+            self.new( mainWindowInstance)
+
+        except:
+            QtGui.QMessageBox.warning(mainWindowInstance, "File open error", "Unknown error opening file %s." % unicode(filename))
+
+# ---------------------------------------------------------------------------
+#
+# ---------------------------------------------------------------------------
+
     def new(self, mainWindowInstance):
         if mainWindowInstance.ui.action_Save.isEnabled():
             reply = QtGui.QMessageBox.question(mainWindowInstance, "Create new patch", "Current patch is not saved.  Do you wish to continue?",
                                                QtGui.QMessageBox.Yes, QtGui.QMessageBox.No)
             if reply == QtGui.QMessageBox.No:
                 return
+
+        # set all knobs and slider to zero
         for dial, cc in self.dialDict.iteritems():
+            midiEnable = mainWindowInstance.midiEnable
             mainWindowInstance.midiEnable = 0
             dialWidget = getattr(mainWindowInstance.ui, dial)
             dialWidget.setValue(0)
-            mainWindowInstance.midiEnable = 1
+            mainWindowInstance.midiEnable = midiEnable
             self.sendMidi( cc, 0)
 
+        # set all switches to off
         for button, value in self.buttonDict.iteritems():
             if value[1] == mainWindowInstance.offValue:
+                midiEnable = mainWindowInstance.midiEnable
                 mainWindowInstance.midiEnable = 0
                 buttonWidget = getattr(mainWindowInstance.ui, button)
                 buttonWidget.setChecked(True)
-                mainWindowInstance.midiEnable = 1
+                mainWindowInstance.midiEnable = midiEnable
                 self.sendMidi( value[0], value[1])
 
         self.currentFile = None
@@ -328,12 +385,14 @@ class MainWindowHandler(object):
 # ---------------------------------------------------------------------------
 
     def restorePatchSettings(self, mainWindowInstance, meeblipPatch):
+
         for cc, value in meeblipPatch.patchCCDict.iteritems():
             if cc in range(14, 30) + range(48, 56) + range(58, 62):
+                midiEnable = mainWindowInstance.midiEnable
                 mainWindowInstance.midiEnable = 0       # prevents sending midi message twice
                 dialWidget = getattr(mainWindowInstance.ui, [k for k, v in self.dialDict.iteritems() if v == cc][0])
                 dialWidget.setValue(value)
-                mainWindowInstance.midiEnable = 1
+                mainWindowInstance.midiEnable = midiEnable
                 self.dialChanged(value, mainWindowInstance, cc)
 
             elif cc in xrange(65, 96):
